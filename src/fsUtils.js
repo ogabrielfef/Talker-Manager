@@ -18,11 +18,11 @@ async function readTalkersDataWithId(id) {
 function tokenGeneretor() {
   let token = '';
   const caracters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 16; i += 1) {
     token += caracters.charAt(Math.floor(Math.random() * caracters.length));
   }
   return token;
-};
+}
 
 module.exports = {
   readTalkersData,
