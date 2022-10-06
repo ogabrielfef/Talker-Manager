@@ -11,11 +11,11 @@ async function readTalkersData() {
 
 async function readTalkersDataWithId(id) {
   const talkers = await readTalkersData();
-  const talkerWithId = talkers.find(t => t.id === id)
+  const talkerWithId = talkers.find((t) => t.id === id);
   return talkerWithId;
 }
 
 module.exports = {
   readTalkersData,
-  readTalkersDataWithId
+  readTalkersDataWithId,
 };
