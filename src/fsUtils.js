@@ -6,12 +6,16 @@ const TALKER_DATA_PATH = './talker.json';
 async function readTalkersData() {
   const data = await fs.readFile(path.resolve(__dirname, TALKER_DATA_PATH));
   const talkers = JSON.parse(data);
-  console.log(talkers);
   return talkers;
 }
 
-readTalkersData();
+async function readTalkersDataWithId(id) {
+  const talkers = await readTalkersData();
+  const talkerWithId = talkers.find(t => t.id === id)
+  return talkerWithId;
+}
 
 module.exports = {
   readTalkersData,
+  readTalkersDataWithId
 };
