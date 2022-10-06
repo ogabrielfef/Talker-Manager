@@ -1,5 +1,7 @@
 const express = require('express');
+require('express-async-errors');
 const bodyParser = require('body-parser');
+const Joi = require('joi');
 const { readTalkersData, readTalkersDataWithId, tokenGeneretor } = require('./fsUtils');
 const talkersObject = require('./talker.json');
 
@@ -17,14 +19,25 @@ const validateWithIdExists = (req, res, next) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 };
 
-// const validateLogin = (req, res, next) => {
-//   const requiredProperts = ['email', 'password'];
-//   if (requiredProperts.every((property) => property in req.body)) {
-//     next();
-//   } else {
-//     res.status(400).send({ message: 'A missão precisa receber os atributos corretos' });
-//   }
-// };
+const schema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+}).messages({
+  'string.min': 'O {{#label}} deve ter pelo menos 6 caracteres',
+  'string.email': 'O {{#label}} deve ter o formato "email@email.com"',
+  'any.required': 'O campo {{#label}} é obrigatório',
+});
+
+const validateLogin = async (req, res, next) => {
+  const { error } = schema.validate(req.body);
+  if (error) {
+    // const e = { message: error.details[0].message, status: 400 };
+    // throw e;
+    return res.status(400).json({ message: error.message });
+  }
+  return next();
+  // console.log(error);
+};
 
 app.get('/talker', async (req, res) => {
   const talkers = await readTalkersData();
@@ -39,7 +52,9 @@ app.get('/talker/:id', validateWithIdExists, async (req, res) => {
   return res.status(200).json(talker);
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', validateLogin, async (req, res) => {
+  // const login = req.body;
+  // await validateLogin();
   const token = tokenGeneretor();
 
   return res.status(200).json({ token });
@@ -53,3 +68,8 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// app.use((error, req, res, _next) => {
+//   if (error.status) return res.status(error.status).json({ message: error.message });
+//   return res.status(500).json({ message: error.message });
+// });
