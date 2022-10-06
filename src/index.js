@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readTalkersData, readTalkersDataWithId } = require('./fsUtils');
+const { readTalkersData, readTalkersDataWithId, tokenGeneretor } = require('./fsUtils');
 const talkersObject = require('./talker.json');
 
 const app = express();
@@ -17,6 +17,15 @@ const validateWithIdExists = (req, res, next) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 };
 
+// const validateLogin = (req, res, next) => {
+//   const requiredProperts = ['email', 'password'];
+//   if (requiredProperts.every((property) => property in req.body)) {
+//     next();
+//   } else {
+//     res.status(400).send({ message: 'A missão precisa receber os atributos corretos' });
+//   }
+// };
+
 app.get('/talker', async (req, res) => {
   const talkers = await readTalkersData();
 
@@ -28,6 +37,12 @@ app.get('/talker/:id', validateWithIdExists, async (req, res) => {
   const talker = await readTalkersDataWithId(Number(id));
 
   return res.status(200).json(talker);
+});
+
+app.post('/login', async (req, res) => {
+  const token = tokenGeneretor();
+
+  return res.status(200).json({ token });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
