@@ -39,7 +39,8 @@ app.post('/talker', validateToken, validateName, validateTalker, validateRate, a
   return res.status(201).json(newTalker);
 });
 
-app.put('/talker/:id', validateToken, validateName, validateTalker, validateRate, async (req, res) => {
+app.put('/talker/:id', validateToken, validateName,
+  validateTalker, validateRate, async (req, res) => {
   const { id } = req.params;
 
   const talker = await updateTalker(Number(id), req.body);
