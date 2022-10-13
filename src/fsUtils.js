@@ -67,7 +67,11 @@ async function deleteTalker(id) {
   }
 }
 
-console.log(writeNewTalker);
+async function searchTalker(term) {
+  const talkers = await readTalkersData();
+  const talkersByTerm = talkers.filter((talker) => talker.name.includes(term));
+  return talkersByTerm;
+}
 
 module.exports = {
   readTalkersData,
@@ -76,4 +80,5 @@ module.exports = {
   writeNewTalker,
   updateTalker,
   deleteTalker,
+  searchTalker,
 };

@@ -2,8 +2,8 @@ const express = require('express');
 require('express-async-errors');
 const bodyParser = require('body-parser');
 const { readTalkersData, readTalkersDataWithId, tokenGeneretor,
-  writeNewTalker, updateTalker, deleteTalker } = require('./fsUtils');
-const { validateWithIdExists, validateLogin, validateToken,
+  writeNewTalker, updateTalker, deleteTalker, searchTalker } = require('./fsUtils');
+  const { validateWithIdExists, validateLogin, validateToken,
   validateName, validateTalker, validateRate } = require('./middlewares');
 
 const app = express();
@@ -14,8 +14,15 @@ const PORT = '3000';
 
 app.get('/talker', async (req, res) => {
   const talkers = await readTalkersData();
-
+  
   return res.status(200).json(talkers);
+});
+
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkerBySearch = await searchTalker(q);
+
+  return res.status(200).json(talkerBySearch);
 });
 
 app.get('/talker/:id', validateWithIdExists, async (req, res) => {
