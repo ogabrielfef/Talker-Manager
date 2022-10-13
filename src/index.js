@@ -2,7 +2,7 @@ const express = require('express');
 require('express-async-errors');
 const bodyParser = require('body-parser');
 const { readTalkersData, readTalkersDataWithId, tokenGeneretor,
-  writeNewTalker, updateTalker } = require('./fsUtils');
+  writeNewTalker, updateTalker, deleteTalker } = require('./fsUtils');
 const { validateWithIdExists, validateLogin, validateToken,
   validateName, validateTalker, validateRate } = require('./middlewares');
 
@@ -45,6 +45,13 @@ app.put('/talker/:id', validateToken, validateName,
 
   const talker = await updateTalker(Number(id), req.body);
   return res.status(200).json(talker);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+
+  await deleteTalker(Number(id));
+  return res.status(204).end();
 });
 
 // não remova esse endpoint, e para o avaliador funcionar

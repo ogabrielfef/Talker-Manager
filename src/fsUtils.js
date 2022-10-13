@@ -55,6 +55,18 @@ async function updateTalker(id, updateTalkerInfo) {
   }
 }
 
+async function deleteTalker(id) {
+  try {
+    const talkers = await readTalkersData();
+    const newTalkers = talkers.filter((talker) => talker.id !== id);
+
+    const newTalkerList = JSON.stringify(newTalkers);
+    await fs.writeFile(path.resolve(__dirname, TALKER_DATA_PATH), newTalkerList);
+  } catch (e) {
+    console.error(`Erro na remoção: ${e}`);
+  }
+}
+
 console.log(writeNewTalker);
 
 module.exports = {
@@ -63,4 +75,5 @@ module.exports = {
   tokenGeneretor,
   writeNewTalker,
   updateTalker,
+  deleteTalker,
 };
