@@ -1,7 +1,10 @@
 const fs = require('fs').promises;
 const path = require('path');
+const dataa = require('./talker.json');
 
 const TALKER_DATA_PATH = './talker.json';
+
+console.log(dataa.length);
 
 async function readTalkersData() {
   const data = await fs.readFile(path.resolve(__dirname, TALKER_DATA_PATH));
@@ -24,8 +27,21 @@ function tokenGeneretor() {
   return token;
 }
 
+async function writeNewTalker(newTalkerInfo) {
+  const newId = dataa.length + 1;
+  const oldTalkers = await readTalkersData();
+  const newTalker = { id: newId, ...newTalkerInfo };
+  const allTalker = JSON.stringify([...oldTalkers, newTalker]);
+  
+  await fs.writeFile(path.resolve(__dirname, TALKER_DATA_PATH), allTalker);
+  return newTalker;
+}
+
+console.log(writeNewTalker);
+
 module.exports = {
   readTalkersData,
   readTalkersDataWithId,
   tokenGeneretor,
+  writeNewTalker,
 };
