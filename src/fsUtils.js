@@ -37,6 +37,24 @@ async function writeNewTalker(newTalkerInfo) {
   return newTalker;
 }
 
+async function updateTalker(id, updateTalkerInfo) {
+  try {
+    const talkers = await readTalkersData();
+    const infoToUpdate = { id, ...updateTalkerInfo };
+    const updatedTalkers = talkers.reduce((ts, cc) => {
+      if (cc.id === infoToUpdate.id) {
+        return [...ts, infoToUpdate];
+      }
+      return [...ts, cc];
+    }, []);
+    const updatedData = JSON.stringify(updatedTalkers);
+    await fs.writeFile(path.resolve(__dirname, TALKER_DATA_PATH), updatedData);
+    return infoToUpdate;
+  } catch (e) {
+    console.error(`Erro de escrita: ${e}`);
+  }
+}
+
 console.log(writeNewTalker);
 
 module.exports = {
@@ -44,4 +62,5 @@ module.exports = {
   readTalkersDataWithId,
   tokenGeneretor,
   writeNewTalker,
+  updateTalker,
 };
