@@ -4,7 +4,6 @@
 CRUD de uma lista de palestrantes. Criação de endpoints que irão ler e escrever em um arquivo utilizando o módulo `fs`.
 </p>
 <br/>
-<br/>
 
 <!-- <p align="center">
   <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
